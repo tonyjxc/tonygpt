@@ -1,0 +1,129 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.chat-header .bot-selection {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-header .bot-selection label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-header button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.chat-header button:hover {
+  background-color: #0056b3;
+}
+
+.chat-history {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.chat-history .user-message {
+  text-align: right;
+  color: blue;
+  margin-bottom: 8px;
+}
+
+.chat-history .assistant-message {
+  text-align: left;
+  color: green;
+  margin-bottom: 8px;
+}
+
+.chat-history .message-content {
+  display: block;
+  margin-top: 4px;
+  white-space: pre-wrap; /* 保留换行符 */
+}
+
+.chat-input {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input textarea {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  height: 60px; /* 初始高度 */
+}
+
+.chat-input button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background-color: #0056b3;
+}
+
+.loading {
+  text-align: left;
+  color: green;
+  margin-bottom: 8px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

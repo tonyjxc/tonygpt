@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { backendService } from './backend.service';
+import * as marked from 'marked';
 
 @Component({
   selector: 'app-root',
@@ -13,46 +14,64 @@ export class AppComponent {
     'gpt4turbo': '7375503601433231377',
     'gpt4ocode': '7375560264613396487'
   };
+  botOptions: { name: string, id: string }[] = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
   chooseBotId: string = this.botDict['gpt4o'];
   chatHistory: any[] = [];
+  loading: boolean = false;
 
   constructor(private chatService: backendService) { }
 
   sendQuery() {
-    if (this.question === '\\clear') {
-      this.chatService.clearChatHistory();
-      this.chatHistory = [];
-      console.log("聊天记录已清空");
-    } else if (this.question === '\\changemode') {
-      console.log("可选模型：", Object.keys(this.botDict));
-      const aimode = prompt("请选择你需要的模型：");
-      if (aimode && this.botDict[aimode]) {
-        this.chooseBotId = this.botDict[aimode];
-        console.log(`已切换到模型：${aimode}`);
-      } else {
-        console.log("无效的模型名称，请重新选择");
-      }
-    } else if (this.question === '\\exit') {
+    if (this.question.trim() === '') return;
+
+    if (this.question === '\\exit') {
       console.log("退出程序");
-    } else {
-      this.chatService.sendQuery(this.question, '123', this.chooseBotId).subscribe(response => {
-        response.messages.forEach((message: any) => {
-          if (message.type === 'answer') {
-            console.log(message.content);
-            this.chatService.updateChatHistory('assistant', message.content);
-            this.chatHistory.push({
-              role: 'assistant',
-              content: message.content
-            });
-          }
-        });
-        this.chatService.updateChatHistory('user', this.question);
-        this.chatHistory.push({
-          role: 'user',
-          content: this.question
-        });
-      });
+      return;
     }
+
+    // 添加用户问题到聊天记录
+    this.chatHistory.push({
+      role: 'user',
+      content: this.question,
+      contentType: 'text'
+    });
+
+    // 设置加载状态
+    this.loading = true;
+
+    this.chatService.sendQuery(this.question, '123', this.chooseBotId).subscribe(response => {
+      response.messages.forEach((message: any) => {
+        if (message.type === 'answer') {
+          console.log(message.content);
+          this.chatService.updateChatHistory('assistant', message.content);
+          this.chatHistory.push({
+            role: 'assistant',
+            content: marked.parse(message.content),  // 使用 marked 解析 Markdown
+            contentType: 'html'  // 将内容类型设置为 HTML
+          });
+        }
+      });
+      this.loading = false;
+    });
+
     this.question = '';
+  }
+
+  clearChat() {
+    this.chatService.clearChatHistory();
+    this.chatHistory = [];
+    console.log("聊天记录已清空");
+  }
+
+  changeMode(botId: string) {
+    this.chooseBotId = botId;
+    console.log(`已切换到模型：${botId}`);
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      this.sendQuery();
+    }
   }
 }
