@@ -9,18 +9,27 @@ import * as marked from 'marked';
 })
 export class AppComponent {
   question: string = '';
-  // botDict: { [key: string]: string } = {
-  //   'gpt4o': '7375488127156895751',
-  //   'gpt4turbo': '7375503601433231377',
-  //   'gpt4ocode': '7375560264613396487'
-  // };
-
   // 第二个账号
+  id = 2;
   botDict: { [key: string]: string } = {
-    'gpt4o': '7376235599625895953',
-    'gpt4turbo': '7376237551768076289',
-    'gpt4ocode': '7376238281664757777'
+    'gpt4o': '7375488127156895751',
+    'gpt4turbo': '7375503601433231377',
+    'gpt4ocode': '7375560264613396487'
   };
+  ngOnInit(){
+    this.id = Math.floor(Math.random() * 2) + 1;
+    console.log(this.id)
+    if (this.id == 2) {
+      this.botDict = {
+        'gpt4o': '7376235599625895953',
+        'gpt4turbo': '7376237551768076289',
+        'gpt4ocode': '7376238281664757777'
+      }
+    }
+    // 更新 botOptions 和 chooseBotId
+    this.botOptions = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
+    this.chooseBotId = this.botDict['gpt4o'];
+  }
 
   botOptions: { name: string, id: string }[] = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
   chooseBotId: string = this.botDict['gpt4o'];
@@ -48,7 +57,7 @@ export class AppComponent {
     // 设置加载状态
     this.loading = true;
 
-    this.chatService.sendQuery(this.question, '123', this.chooseBotId).subscribe(response => {
+    this.chatService.sendQuery(this.id, this.question, '123', this.chooseBotId).subscribe(response => {
       response.messages.forEach((message: any) => {
         if (message.type === 'answer') {
           console.log(message.content);
