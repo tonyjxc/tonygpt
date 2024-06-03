@@ -1,14 +1,54 @@
+.chat-wrapper {
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  padding: 16px;
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 600px;
+  max-width: 600px; /* 确保在大屏幕上显示最大宽度 */
   margin: 0 auto;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
+}
+
+@media (max-width: 600px) {
+  .chat-container {
+    padding: 8px;
+    max-width: 100%; /* 确保在小屏幕上占满宽度 */
+  }
+
+  .chat-header h2 {
+    font-size: 1.2em;
+  }
+
+  .chat-header .bot-selection {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .chat-header button {
+    padding: 6px 12px;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .chat-history {
+    padding: 4px;
+  }
+
+  .chat-input textarea {
+    height: 50px; /* 调整初始高度 */
+  }
+
+  .chat-input button {
+    padding: 6px 12px;
+  }
 }
 
 .chat-header {
@@ -88,6 +128,10 @@
   border-radius: 4px;
   resize: none;
   height: 60px; /* 初始高度 */
+  max-height: 300px; /* 最大高度，约为15行 */
+  overflow-y: auto; /* 超出部分自动滚动 */
+  white-space: pre-wrap; /* 保留换行符 */
+  word-wrap: break-word; /* 自动换行 */
 }
 
 .chat-input button {
