@@ -50,7 +50,9 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "outputPath": "docs",  // 修改输出目录为 docs
+              "baseHref": "/tonygpt.io/"  // 设置 baseHref
             },
             "development": {
               "optimization": false,
