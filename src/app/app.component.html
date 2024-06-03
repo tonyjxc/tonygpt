@@ -1,0 +1,11 @@
+<div class="chat-container">
+  <div class="chat-history">
+    <div *ngFor="let message of chatHistory" [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}">
+      <strong>{{ message.role }}:</strong> {{ message.content }}
+    </div>
+  </div>
+  <div class="chat-input">
+    <input [(ngModel)]="question" placeholder="请输入你的问题" />
+    <button (click)="sendQuery()">发送</button>
+  </div>
+</div>
