@@ -27,6 +27,7 @@ export class AppComponent {
   chatHistory: any[] = [];
   loading: boolean = false;
 
+
   constructor(private chatService: backendService) { }
 
   sendQuery() {
