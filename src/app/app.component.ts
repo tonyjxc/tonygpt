@@ -19,21 +19,6 @@ export class AppComponent {
   ngOnInit(){
     this.id = Math.floor(Math.random() * 2) + 1;
 
-    // 这一块只是因为今天用太多了 以后两个账号让他随机即可 下面这一段可以直接删掉
-    {
-      const shanghaiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Shanghai" });
-      const currentDate = new Date(shanghaiTime);
-  
-      if (currentDate.getFullYear() === 2024 &&
-        currentDate.getMonth() === 5 &&  // 月份从0开始，所以6月是5
-        currentDate.getDate() === 3) {
-        this.id = 2;
-      } else {
-        this.id = Math.floor(Math.random() * 2) + 1;
-      }
-    }
-
-
     console.log(this.id)
     if (this.id == 2) {
       this.botDict = {
