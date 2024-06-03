@@ -9,11 +9,19 @@ import * as marked from 'marked';
 })
 export class AppComponent {
   question: string = '';
+  // botDict: { [key: string]: string } = {
+  //   'gpt4o': '7375488127156895751',
+  //   'gpt4turbo': '7375503601433231377',
+  //   'gpt4ocode': '7375560264613396487'
+  // };
+
+  // 第二个账号
   botDict: { [key: string]: string } = {
-    'gpt4o': '7375488127156895751',
-    'gpt4turbo': '7375503601433231377',
-    'gpt4ocode': '7375560264613396487'
+    'gpt4o': '7376235599625895953',
+    'gpt4turbo': '7376237551768076289',
+    'gpt4ocode': '7376238281664757777'
   };
+
   botOptions: { name: string, id: string }[] = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
   chooseBotId: string = this.botDict['gpt4o'];
   chatHistory: any[] = [];
