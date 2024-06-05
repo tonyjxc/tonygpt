@@ -9,6 +9,9 @@
         </label>
       </div>
       <button (click)="clearChat()">Clear Chat</button>
+      <div class="usage-count">
+        当前使用次数: {{ getUsageCount() }}
+      </div>
     </div>
     <div class="chat-history">
       <div *ngFor="let message of chatHistory" [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}">

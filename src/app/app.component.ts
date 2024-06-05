@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { backendService } from './backend.service';
 import * as marked from 'marked';
 
@@ -7,38 +7,55 @@ import * as marked from 'marked';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   question: string = '';
-  // 第二个账号
   id = 2;
-  botDict: { [key: string]: string } = {
-    'gpt4o': '7375488127156895751',
-    'gpt4turbo': '7375503601433231377',
-    'gpt4ocode': '7375560264613396487'
-  };
-  ngOnInit(){
-    this.id = Math.floor(Math.random() * 2) + 1;
-
-    console.log(this.id)
-    if (this.id == 2) {
-      this.botDict = {
-        'gpt4o': '7376235599625895953',
-        'gpt4turbo': '7376237551768076289',
-        'gpt4ocode': '7376238281664757777'
-      }
+  botPool: any = [
+    {
+      'gpt4o': '7376235599625895953',
+      'gpt4turbo': '7376237551768076289',
+      'gpt4ocode': '7376238281664757777'
+    },
+    {
+      'gpt4o': '7377050024372518929'
+    },
+    {
+      'gpt4o': '7377053267182321671'
+    },
+    {
+      'gpt4o': '7377061109939109895'
+    },
+    {
+      'gpt4o': '7377062080744669185'
+    },
+    {
+      'gpt4o': '7377063271486078983'
     }
-    // 更新 botOptions 和 chooseBotId
-    this.botOptions = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
-    this.chooseBotId = this.botDict['gpt4o'];
-  }
-
-  botOptions: { name: string, id: string }[] = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
-  chooseBotId: string = this.botDict['gpt4o'];
+  ];
+  times: { [key: string]: number } = {};
+  botDict: { [key: string]: string } = {};
+  botOptions: { name: string, id: string }[] = [];
+  chooseBotId: string = '';
   chatHistory: any[] = [];
   loading: boolean = false;
 
-
   constructor(private chatService: backendService) { }
+
+  ngOnInit() {
+    this.id = Math.floor(Math.random() * this.botPool.length);
+    console.log(this.id)
+    this.botDict = this.botPool[this.id];
+
+    // 更新 botOptions 和 chooseBotId
+    this.botOptions = Object.keys(this.botDict).map(key => ({ name: key, id: this.botDict[key] }));
+    this.chooseBotId = this.botDict['gpt4o'];
+
+    // 从 JSONBin 加载 times 数据
+    this.chatService.getTimes().subscribe(data => {
+      this.times = data.record || {};
+      console.log(this.times);
+    });
+  }
 
   sendQuery() {
     if (this.question.trim() === '') return;
@@ -70,6 +87,15 @@ export class AppComponent {
           });
         }
       });
+
+      if (!this.times[this.chooseBotId]) {
+        this.times[this.chooseBotId] = 0;
+      }
+      this.times[this.chooseBotId] += 1;
+
+      // 将 times 数据保存到 JSONBin
+      this.chatService.updateTimes(this.times).subscribe();
+
       this.loading = false;
     });
 
@@ -77,7 +103,6 @@ export class AppComponent {
   }
 
   clearChat() {
-    this.chatService.clearChatHistory();
     this.chatHistory = [];
     console.log("聊天记录已清空");
   }
@@ -92,5 +117,9 @@ export class AppComponent {
       event.preventDefault();
       this.sendQuery();
     }
+  }
+
+  getUsageCount(): number {
+    return this.times[this.chooseBotId] || 0;
   }
 }
